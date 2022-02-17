@@ -1,8 +1,9 @@
 import 'package:example/screens/registrationScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({ Key? key }) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -72,8 +73,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const RegistrationScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RegistrationScreen()));
                   },
                   child: Text(
                     "Forgot password?",
@@ -92,8 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Text("Don't have an account?"),
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const RegistrationScreen()));
+                    Get.to(() =>  const RegistrationScreen());
                   },
                   child: const Text(
                     "Signup here",
