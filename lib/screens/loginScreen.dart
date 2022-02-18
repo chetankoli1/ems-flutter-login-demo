@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
+import '../helpers/methods.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -122,7 +124,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: ElevatedButton(
                       onPressed: () {
-                        startLogin();
+                        startLogin(
+                          _loginKey,_emailController.text,_passwordController.text
+                        );
                         // Get.to(() => const HomeScreen());
                       },
                       // onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));},
@@ -167,31 +171,32 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void startLogin() async {
-    if (_loginKey.currentState!.validate()) {
-      try {
-        await fAuth
-            .signInWithEmailAndPassword(
-                email: _emailController.text,
-                password: _passwordController.text)
-            .then(
-              (value) => {
-                Get.to(const HomeScreen()),
-                Fluttertoast.showToast(msg: 'user abc'),
-              },
-            )
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
-        });
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          Fluttertoast.showToast(msg: 'No user found for that email.');
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          Fluttertoast.showToast(msg: 'Wrong password provided for that user.');
-          print('Wrong password provided for that user.');
-        }
-      }
-    }
-  }
+//   void startLogin() async {
+//     if (_loginKey.currentState!.validate()) {
+//       try {
+//         await fAuth
+//             .signInWithEmailAndPassword(
+//                 email: _emailController.text,
+//                 password: _passwordController.text)
+//             .then(
+//               (value) => {
+//                 Get.to(const HomeScreen()),
+//                 Fluttertoast.showToast(msg: 'user abc'),
+//               },
+//             )
+//             .catchError((e) {
+//           Fluttertoast.showToast(msg: e!.message);
+//         });
+//       } on FirebaseAuthException catch (e) {
+//         if (e.code == 'user-not-found') {
+//           Fluttertoast.showToast(msg: 'No user found for that email.');
+//           print('No user found for that email.');
+//         } else if (e.code == 'wrong-password') {
+//           Fluttertoast.showToast(msg: 'Wrong password provided for that user.');
+//           print('Wrong password provided for that user.');
+//         }
+//       }
+//     }
+//   }
+// }
 }

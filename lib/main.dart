@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:example/screens/homeScreen.dart';
 import 'package:example/screens/loginScreen.dart';
 import 'package:example/screens/registrationScreen.dart';
@@ -7,14 +9,9 @@ import 'package:get/get.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    // options: const FirebaseOptions(
-    //     apiKey: 'AIzaSyCOMJ2EEz_D2NC91doQKVliFLHhhGgr6ck',
-    //     appId: '1:848423069883:android:c1d53306a427da2f37219e',
-    //     messagingSenderId: '848423069883',
-    //     projectId: 'flutter-demo-28d6a',
-    //     storageBucket: 'flutter-demo-28d6a.appspot.com'),
-  );
+  if (Platform.isAndroid) {
+    await Firebase.initializeApp();
+  }
   runApp(const MyApp());
 }
 

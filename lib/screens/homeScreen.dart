@@ -23,12 +23,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   initState() {
+    super.initState();
     FirebaseFirestore.instance
         .collection("Users")
         .doc(user!.uid)
         .get()
         .then((value) {
-      this.userModel = UserModel.fromMap(value.data());
+      userModel = UserModel.fromMap(value.data());
+
+      setState(() {
+        
+      });
 
       print(value.data());
     });
@@ -106,9 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
               onPressed: () {
                 FirebaseAuth.instance
                     .signOut()
-                    .then((value) => {
-                          Get.toEnd(() => {const LoginScreen()})
-                        })
+                    .then((value) => {Get.to(const LoginScreen())})
                     .catchError((onError) {
                   Fluttertoast.showToast(msg: "logout err");
                 });
