@@ -127,9 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         startLogin(
                           _loginKey,_emailController.text,_passwordController.text
                         );
-                        // Get.to(() => const HomeScreen());
                       },
-                      // onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));},
+
                       child: const Text(
                         "Login",
                         style: TextStyle(

@@ -26,8 +26,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool _obscureText1 = true;
   bool _obscureText2 = true;
 
-  final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final firebaseStorage = FirebaseStorage.instance;
+  final firebaseAuth = FirebaseAuth.instance;
 
   final formKey = GlobalKey<FormState>();
 
@@ -124,11 +124,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width * 0.6,
-                    child: DropdownButton(
+                    child: DropdownButtonFormField(
+                      validator: ((value) => value == null ? "required" : null),
                       value: selectedGender,
                       isExpanded: true,
                       icon: const Icon(Icons.person),
-                      underline: Container(),
+                      // underline: Container(),
                       hint: const Text('Select Gender'),
                       items: _genderItems
                           .map<DropdownMenuItem<String>>(
@@ -243,33 +244,38 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   void signUpUser() async {
     if (formKey.currentState!.validate()) {
-      try {
-        await firebaseAuth
-            .createUserWithEmailAndPassword(
-                email: emailController.text, password: passwordController.text)
-            .then((value) => {toFirestore()})
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
-        });
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMessage = "Email is invalid";
-            break;
+      if (imageUrl == null) {
+        Fluttertoast.showToast(msg: "Please select Imgae");
+      } else {
+        try {
+          await firebaseAuth
+              .createUserWithEmailAndPassword(
+                  email: emailController.text,
+                  password: passwordController.text)
+              .then((value) => {toFirestore()})
+              .catchError((e) {
+            Fluttertoast.showToast(msg: e!.message);
+          });
+        } on FirebaseAuthException catch (error) {
+          switch (error.code) {
+            case "invalid-email":
+              errorMessage = "Email is invalid";
+              break;
 
-          case "wrong-password":
-            errorMessage = "Password is Wrong";
-            break;
+            case "wrong-password":
+              errorMessage = "Password is Wrong";
+              break;
 
-          case "user-not-found":
-            errorMessage = "User does not exist";
-            break;
+            case "user-not-found":
+              errorMessage = "User does not exist";
+              break;
 
-          default:
-            errorMessage = "Invalid error";
+            default:
+              errorMessage = "Invalid error";
+          }
+
+          Fluttertoast.showToast(msg: errorMessage!);
         }
-
-        Fluttertoast.showToast(msg: errorMessage!);
       }
     }
   }
