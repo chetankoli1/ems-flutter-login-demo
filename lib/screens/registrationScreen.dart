@@ -20,19 +20,26 @@ class RegistrationScreen extends StatefulWidget {
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
   final List<String> _genderItems = <String>["Male", "Female"];
+
   String? _selectedGender;
+
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+
+
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
   final formKey = GlobalKey<FormState>();
+
+
   String? imageUrl;
   String? errorMessage;
 
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final  nameController = TextEditingController();
+  final  emailController = TextEditingController();
+  final  passwordController = TextEditingController();
+  final  confirmPasswordController = TextEditingController();
   String? imgUrl;
 
  hidePassword() {
@@ -51,7 +58,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   set selectedGender(String? item) {
     setState(() {
       _selectedGender = item;
-      print(selectedGender);
     });
   }
 
