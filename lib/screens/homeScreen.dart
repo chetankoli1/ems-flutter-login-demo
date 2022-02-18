@@ -1,4 +1,5 @@
 import 'package:example/model/usermodel.dart';
+import 'package:example/screens/firestorecurd.dart';
 import 'package:example/screens/loginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -31,9 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .then((value) {
       userModel = UserModel.fromMap(value.data());
 
-      setState(() {
-        
-      });
+      setState(() {});
 
       print(value.data());
     });
@@ -44,6 +43,20 @@ class _HomeScreenState extends State<HomeScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Home Screen"),
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.add,
+              color: Color.fromARGB(255, 15, 0, 0),
+            ),
+            onPressed: () {
+              Get.to(const FirestoreHomeScreen());
+            },
+          )
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

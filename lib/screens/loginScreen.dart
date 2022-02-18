@@ -2,6 +2,7 @@ import 'package:example/screens/homeScreen.dart';
 import 'package:example/screens/registrationScreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttericon/font_awesome_icons.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
@@ -124,18 +125,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: MediaQuery.of(context).size.width * 0.6,
                     child: ElevatedButton(
                       onPressed: () {
-                        startLogin(
-                          _loginKey,_emailController.text,_passwordController.text
-                        );
+                        startLogin(_loginKey, _emailController.text,
+                            _passwordController.text);
                       },
-
                       child: const Text(
                         "Login",
                         style: TextStyle(
                           fontSize: 15,
                         ),
                       ),
-
                       style: ElevatedButton.styleFrom(
                         primary: kPrimaryColor,
                         fixedSize: const Size(200, 50),
@@ -143,6 +141,29 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(50),
                         ),
                       ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    child: ElevatedButton.icon(
+                      onPressed: () {},
+                      label: const Text(
+                        "Google",
+                        style: TextStyle(
+                          fontSize: 15,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        primary: kPrimaryColor,
+                        fixedSize: const Size(200, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      ),
+                      icon: Icon(FontAwesome.google),
                     ),
                   ),
                   const SizedBox(

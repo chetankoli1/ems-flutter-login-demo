@@ -5,9 +5,9 @@ import 'package:get/get.dart';
 
 import '../screens/homeScreen.dart';
 
-void googleLogin(){
+// Future<AuthCredential> googleLogin() sync{
 
-}
+// }
 
 void startLogin(GlobalKey<FormState> _loginKey,String email, String pass) async {
     if (_loginKey.currentState!.validate()) {

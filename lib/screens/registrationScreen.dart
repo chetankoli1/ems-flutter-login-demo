@@ -344,7 +344,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         .ref('profileImage/')
         .child(DateTime.now().toString())
         .putFile(_imageFile);
-    var pictureUrl = await (await uploadTask).ref.getDownloadURL();
+    var pictureUrl =
+        await (await uploadTask).ref.getDownloadURL().then((value) => () {});
     setState(() {
       imageUrl = pictureUrl.toString();
     });
