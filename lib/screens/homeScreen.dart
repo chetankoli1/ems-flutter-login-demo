@@ -1,8 +1,8 @@
+import 'package:example/model/usermodel.dart';
+import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:example/model/usermodel.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,29 +17,29 @@ class _HomeScreenState extends State<HomeScreen> {
   UserModel userModel = UserModel();
 
   @override
-  void initState() {
-    // TODO: implement initState
-    FirebaseFirestore.instance
-        .collection("Users")
+  initState() {
+    FirebaseFirestore.instance.collection("users")
         .doc(user!.uid)
         .get()
-        .then((value) => () {
-              this.userModel = UserModel.fromMap(value.data());
-            });
+        .then((value) {
+          this.userModel = UserModel.fromMap(value.data());
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            height: 100,
-            width: 100,
-            child: Center(
-              child: CircleAvatar(
+          Center(
+            child: Container(
+              height: 100,
+              width: 100,
+              child: userModel.imgUrl != null ?
+              CircleAvatar(
                 radius: 60,
                 child: CachedNetworkImage(
                   imageUrl: userModel.imgUrl!,
@@ -49,34 +49,42 @@ class _HomeScreenState extends State<HomeScreen> {
                     height: 100,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(50),
-                      // image: imageProvider,
-                      // fit: BoxFit.fill
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.fill
+                      ),
                     ),
                   ),
+                  progressIndicatorBuilder: (context, url, downloadProgress) => CircularProgressIndicator(
+                    value: downloadProgress.progress,
+                  ),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.error, size: 70,
+                    color: Colors.red,
+                  ),
                 ),
+              ) : const CircleAvatar(
+
               ),
             ),
           ),
-          const SizedBox(
-            height: 10,
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              '${userModel.name}', style: theme.textTheme.bodyText1,
+            ),
           ),
-          Text(
-            '${userModel.name}',
-            style: theme.textTheme.bodyText1,
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              '${userModel.email}', style: theme.textTheme.bodyText1,
+            ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-           '${userModel.email}',
-            style: theme.textTheme.bodyText1,
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            '${userModel.gender}',
-            style: theme.textTheme.bodyText1,
+          Container(
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              '${userModel.gender}', style: theme.textTheme.bodyText1,
+            ),
           ),
         ],
       ),

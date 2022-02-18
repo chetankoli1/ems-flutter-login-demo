@@ -1,3 +1,4 @@
+import 'package:example/screens/homeScreen.dart';
 import 'package:example/screens/registrationScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,99 +14,81 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        // crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Form(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "FACI",
-                      style: TextStyle(fontSize: 25),
-                    ),
-                    Text(
-                      "O",
-                      style: TextStyle(fontSize: 25, color: Colors.green),
-                    )
-                  ],
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(15),
+              alignment: Alignment.center,
+              child: const Text(
+                'FACIO',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.orange,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50,
                 ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  width: 400,
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      label: Text("Enter Email"),
-                      prefixIcon: Icon(Icons.mail),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  width: 400,
-                  child: TextFormField(
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      focusColor: Colors.lightGreenAccent,
-                      prefixIcon: Icon(Icons.lock),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-          SizedBox(
-            width: 400,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(
-                      Icons.check_circle,
-                      color: Colors.green[300],
-                    ),
-                    const Text("Remember Me"),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RegistrationScreen()));
-                  },
-                  child: Text(
-                    "Forgot password?",
-                    style: TextStyle(color: Colors.green[300]),
-                  ),
-                )
-              ],
-            ),
-          ),
-          ElevatedButton(onPressed: () {}, child: const Text("LOGIN")),
-          SizedBox(
-            width: 400,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text("Don't have an account?"),
-                GestureDetector(
-                  onTap: () {
-                    Get.to(() =>  const RegistrationScreen());
-                  },
-                  child: const Text(
-                    "Signup here",
-                    style: TextStyle(color: Colors.green),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
+           Form(
+             child: Column(
+               children: [
+                 Container(
+                   width: MediaQuery.of(context).size.width * 0.6,
+                   child: TextFormField(
+                     keyboardType: TextInputType.emailAddress,
+                     decoration: const InputDecoration(
+                       prefixIcon: Icon(Icons.email_outlined),
+                       hintText: "Email Address",
+                     ),
+                   ),
+                 ),
+                 const SizedBox(
+                   height: 10,
+                 ),
+                 Container(
+                   width: MediaQuery.of(context).size.width * 0.6,
+                   child: TextFormField(
+                     keyboardType: TextInputType.text,
+                     obscureText: true,
+                     decoration: const InputDecoration(
+                       prefixIcon: Icon(Icons.lock),
+                       hintText: "Password",
+                     ),
+                   ),
+                 ),
+                 const SizedBox(
+                   height: 10,
+                 ),
+                 Container(
+                   width: MediaQuery.of(context).size.width * 0.6,
+                   child: ElevatedButton(
+                     onPressed: (){Get.to(() => HomeScreen());},
+                     // onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));},
+                     child: const Text(
+                       "Login",
+                       style: TextStyle(
+                         fontSize: 15,
+                       ),
+                     ),
+                   ),
+                 ),
+                 const SizedBox(
+                   height: 10,
+                 ),
+                 GestureDetector(
+                   onTap: () {Navigator.push((context), MaterialPageRoute(builder: (context) => RegistrationScreen()));},
+                   child: const Text(
+                     'Forgot Password?',
+                     style: TextStyle(),
+                   ),
+                 ),
+               ],
+             ),
+           )
+          ],
+        ),
       ),
     );
   }

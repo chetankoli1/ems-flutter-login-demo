@@ -19,31 +19,35 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final formKey = GlobalKey<FormState>();
   final List<String> _genderItems = <String>["Male", "Female"];
-  bool _absucurText1 = true;
-  bool _absucurText2 = true;
-
+  String? _selectedGender;
+  bool _obscureText1 = true;
+  bool _obscureText2 = true;
   final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final formKey = GlobalKey<FormState>();
+  String? imageUrl;
+  String? errorMessage;
 
-  String? errMsg;
-
-  final emailController = TextEditingController();
-  final nameController = TextEditingController();
-  final genderController = TextEditingController();
-  final passwordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   String? imgUrl;
 
-  hidepass() {
+ hidePassword() {
     setState(() {
-      _absucurText1 = !_absucurText1;
+      _obscureText1 = !_obscureText1;
     });
   }
 
-  String? _selectedGender;
+  hideConfirmPassword() {
+    setState(() {
+      _obscureText2 = !_obscureText2;
+    });
+  }
+   String? get selectedGender => _selectedGender;
 
-  String? get selectedGender => _selectedGender;
   set selectedGender(String? item) {
     setState(() {
       _selectedGender = item;
@@ -59,7 +63,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               alignment: Alignment.center,
               child: UserImage(context),
             ),
@@ -68,59 +72,63 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               child: Column(
                 children: [
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.6,
                     child: TextFormField(
-                        keyboardType: TextInputType.text,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(Icons.person),
-                          hintText: "Name",
-                        ),
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return "Enter Name";
-                          }
-                          return null;
-                        },
-                        onFieldSubmitted: (value) {}),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    child: TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.email_outlined),
-                        hintText: "Email Address",
-                      ),
-                      controller: emailController,
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter Email";
-                        }
-                        return null;
+                      controller: nameController,
+                      keyboardType: TextInputType.text,
+                      onSaved: (value) {
+                        nameController.text = value!;
                       },
-                      onFieldSubmitted: (value) {},
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.person),
+                        hintText: "Name",
+                      ),
                     ),
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.6,
+                    child: TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      onSaved: (value) {
+                        emailController.text = value!;
+                      },
+                      decoration: const InputDecoration(
+                        prefixIcon: Icon(Icons.email_outlined),
+                        hintText: "Email Address",
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.6,
                     child: DropdownButton(
                       value: selectedGender,
                       isExpanded: true,
-                      icon: Icon(Icons.person),
+                      icon: const Icon(Icons.person),
                       underline: Container(),
                       hint: const Text('Select Gender'),
                       items: _genderItems
                           .map<DropdownMenuItem<String>>(
-                              (e) => DropdownMenuItem<String>(
-                                    value: e,
-                                    child: Text(e),
-                                  ))
+                              (e) =>
+                              DropdownMenuItem<String>(
+                                value: e,
+                                child: Text(e),
+                              ))
                           .toList(),
                       onChanged: (dynamic value) => selectedGender = value,
                     ),
@@ -129,26 +137,25 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     height: 10,
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.6,
                     child: TextFormField(
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return "Enter Password";
-                        }
-                        return null;
-                      },
-                      onFieldSubmitted: (value) {},
-                      onSaved: (value) {},
                       keyboardType: TextInputType.text,
-                      obscureText: _absucurText1,
+                      obscureText: _obscureText1,
+                      controller: passwordController,
+                      onSaved: (value) {
+                        passwordController.text = value!;
+                      },
                       decoration: InputDecoration(
                         prefixIcon: IconButton(
-                          icon: Icon(
-                            _absucurText1
-                                ? Icons.visibility_off
-                                : Icons.visibility,
-                          ),
-                          onPressed: () => hidepass(),
+                          icon: Icon(_obscureText1
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                          onPressed: () {
+                            hidePassword();
+                          },
                         ),
                         hintText: "Password",
                       ),
@@ -158,12 +165,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     height: 10,
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.6,
                     child: TextFormField(
                       keyboardType: TextInputType.text,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(Icons.lock),
+                      controller: confirmPasswordController,
+                      onSaved: (value) {
+                        confirmPasswordController.text = value!;
+                      },
+                      obscureText: _obscureText2,
+                      decoration: InputDecoration(
+                        prefixIcon: IconButton(
+                          onPressed: () {
+                            hideConfirmPassword();
+                          },
+                          icon: Icon(_obscureText2
+                              ? Icons.visibility_off
+                              : Icons.visibility),
+                        ),
                         hintText: "Confirm Password",
                       ),
                     ),
@@ -172,15 +193,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     height: 10,
                   ),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.6,
                     child: ElevatedButton(
                       onPressed: () {
-                        registerUser();
-                        // Navigator.pushNamed(context, '/home');
+                        signUpUser();
                       },
                       // onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));},
                       child: const Text(
-                        "Login",
+                        "Sign Up",
                         style: TextStyle(
                           fontSize: 15,
                         ),
@@ -192,10 +215,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Fluttertoast.showToast(msg: 'Forgot Password Clicked!!');
+                      Get.back();
                     },
                     child: const Text(
-                      'Forgot Password?',
+                      'Already have an account?',
                       style: TextStyle(),
                     ),
                   ),
@@ -208,58 +231,54 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  void registerUser() async {
+  void signUpUser() async {
     if (formKey.currentState!.validate()) {
       try {
-        await auth
-            .createUserWithEmailAndPassword(
-                email: emailController.text, password: passwordController.text)
+        await firebaseAuth.createUserWithEmailAndPassword(
+            email: emailController.text, password: passwordController.text)
             .then((value) => {toFirestore()})
-            .catchError((onError) {
-          Fluttertoast.showToast(msg: onError!.message);
+            .catchError((e) {
+          Fluttertoast.showToast(msg: e!.message);
         });
-      } on FirebaseAuthException catch (err) {
-        switch (err.code) {
-          case "invalid email":
-            errMsg = "Email is invalid";
-            break;
-
+      }
+      on FirebaseAuthException catch (error) {
+        switch (error.code) {
           case "invalid-email":
-            errMsg = "Email is invalid";
+            errorMessage = "Email is invalid";
             break;
 
           case "wrong-password":
-            errMsg = "wrong password";
+            errorMessage = "Password is Wrong";
             break;
 
           case "user-not-found":
-            errMsg = "user not fond";
+            errorMessage = "User does not exist";
             break;
+
           default:
-            errMsg = "Invalid Error";
+            errorMessage = "Invalid error";
         }
 
-        Fluttertoast.showToast(msg: errMsg!);
+        Fluttertoast.showToast(msg: errorMessage!);
+
       }
     }
   }
 
-  toFirestore() async {
-    FirebaseFirestore store = FirebaseFirestore.instance;
-    User? user = auth.currentUser;
+  toFirestore() async{
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    User? user = firebaseAuth.currentUser;
 
-    UserModel model = UserModel();
-    model.name = nameController.text;
-    model.email = user!.email;
-    model.gender = selectedGender;
-    model.uid = user.uid;
-    model.imgUrl = imgUrl;
-    store.collection("Users").doc(user.uid).set(model.toMap());
-    Fluttertoast.showToast(msg: "Account Created");
-    Navigator.pushAndRemoveUntil(
-        (context),
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-        (route) => false);
+    UserModel userModel = UserModel();
+    userModel.name = nameController.text;
+    userModel.email = user!.email;
+    userModel.gender = selectedGender;
+    userModel.uid = user.uid;
+    userModel.imgUrl = imageUrl;
+
+    firebaseFirestore.collection("Users").doc(user.uid).set(userModel.toMap());
+    Fluttertoast.showToast(msg: "Account created!!");
+    Navigator.pushAndRemoveUntil((context), MaterialPageRoute(builder: (context) => HomeScreen()), (route) => false);
   }
 
   Container UserImage(BuildContext context) {
@@ -275,8 +294,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               backgroundColor: theme.primaryColor,
             ),
             InkWell(
-              onTap: () => showUserImageWithFilePicked(FileType.image),
               borderRadius: BorderRadius.circular(120),
+              onTap: () {
+                showUserImageFilePicker(FileType.image);
+              },
               child: Container(
                 width: 120,
                 height: 120,
@@ -296,19 +317,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  showUserImageWithFilePicked(FileType fileType) async {
+  showUserImageFilePicker(FileType fileType) async {
     final picker = ImagePicker();
-    File imageFile;
+    File _imageFile;
     final pickFile = await picker.getImage(source: ImageSource.gallery);
-    imageFile = File(pickFile!.path);
-
-    UploadTask uploadTask = firebaseStorage.ref("images").putFile(imageFile);
-
-    var pUrl = await (await uploadTask).ref.getDownloadURL();
+    _imageFile = File(pickFile!.path);
+    UploadTask uploadTask = firebaseStorage.ref('profileImage/').child(
+        DateTime.now().toString()).putFile(_imageFile);
+    var pictureUrl = await(await uploadTask).ref.getDownloadURL();
     setState(() {
-      imgUrl = pUrl.toString();
+      imageUrl = pictureUrl.toString();
     });
-    Fluttertoast.showToast(msg: "image uploaded");
-    print(imgUrl);
+    print(imageUrl);
+    Fluttertoast.showToast(msg: 'Image uploaded');
   }
 }
